@@ -41,16 +41,14 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-# ---------------------------------------------------------------------------
-# Physical constants (SI units)
-# ---------------------------------------------------------------------------
+# Physical constants (using the SI units)
+
 E_CHARGE = 1.602176634e-19  # elementary charge [C]
 M_E = 9.1093837015e-31  # electron/positron mass [kg]
 C = 299792458.0  # speed of light in vacuum [m/s]
 
-# ---------------------------------------------------------------------------
 # Model parameters
-# ---------------------------------------------------------------------------
+
 B0 = 3.0e-10  # magnetic field strength along +z [T]
 B_VEC = np.array([0.0, 0.0, B0])
 E_FIELD = np.array([0.0, 0.0, 0.0])  # no electric field [V/m]
@@ -72,9 +70,8 @@ TRAJECTORY_PATH = FIGURE_DIR / "baseline_trajectory.png"
 ENERGY_PATH = FIGURE_DIR / "baseline_energy.png"
 
 
-# ---------------------------------------------------------------------------
-# Theory
-# ---------------------------------------------------------------------------
+# Theoretical calculations
+
 def momentum_from_energy(energy: float) -> float:
     """Return |p| from E_total^2 = p^2 c^2 + m_e^2 c^4."""
     return float(np.sqrt(energy**2 - (M_E * C**2) ** 2) / C)
@@ -113,9 +110,8 @@ DT = T_GYRO / STEPS_PER_PERIOD
 T_END = N_PERIODS * T_GYRO
 
 
-# ---------------------------------------------------------------------------
 # Integration: explicit Euler
-# ---------------------------------------------------------------------------
+
 def simulate() -> dict:
     """Integrate dp/dt = q (v x B) and dr/dt = v with explicit Euler.
 
@@ -150,7 +146,7 @@ def simulate() -> dict:
 
         # Explicit Euler.  The force uses the *old* velocity and the position
         # uses the *old* velocity; nothing is corrected or renormalised.
-        accel_term = Q * np.cross(v_n, B_VEC)  # dp/dt (E field is zero)
+        accel_term = Q * np.cross(v_n, B_VEC)  # dp/dt (Electricity field is zero)
         p = p + DT * accel_term
         r = r + DT * v_n
 
@@ -163,9 +159,8 @@ def simulate() -> dict:
     }
 
 
-# ---------------------------------------------------------------------------
 # Geometry diagnostics
-# ---------------------------------------------------------------------------
+
 def kasa_circle_fit(x: np.ndarray, y: np.ndarray) -> dict:
     """Algebraic (Kasa) least-squares circle fit.
 
@@ -282,9 +277,8 @@ def compute_diagnostics(sim: dict) -> dict:
     }
 
 
-# ---------------------------------------------------------------------------
 # Output writers
-# ---------------------------------------------------------------------------
+
 def write_csv(diag: dict) -> None:
     sim = diag["sim"]
     time = sim["time"]
@@ -375,6 +369,7 @@ def plot_trajectory(diag: dict) -> None:
 
     # Zoom on the first gyroperiod, where the orbit is closest to the
     # theoretical circle.
+
     n_first = STEPS_PER_PERIOD
     axins = ax.inset_axes([0.58, 0.60, 0.40, 0.36])
     axins.plot(x[: n_first + 1], y[: n_first + 1], color="#1f77b4", linewidth=1.3)
@@ -427,9 +422,8 @@ def plot_energy(diag: dict) -> None:
     plt.close(fig)
 
 
-# ---------------------------------------------------------------------------
 # Reporting
-# ---------------------------------------------------------------------------
+
 def print_summary(diag: dict) -> None:
     print("=" * 72)
     print("BASELINE SIMULATION: single relativistic positron in uniform B")
