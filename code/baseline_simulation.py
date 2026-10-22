@@ -73,7 +73,7 @@ ENERGY_PATH = FIGURE_DIR / "baseline_energy.png"
 
 
 # ---------------------------------------------------------------------------
-# Theory
+# Theoretical calculations
 # ---------------------------------------------------------------------------
 def momentum_from_energy(energy: float) -> float:
     """Return |p| from E_total^2 = p^2 c^2 + m_e^2 c^4."""
